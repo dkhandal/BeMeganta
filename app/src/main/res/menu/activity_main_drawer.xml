@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_apparel"
+            android:title="APPAREL" />
+        <item
+            android:id="@+id/nav_one"
+            android:title="     One"
+            android:visible="false" />
+        <item
+            android:id="@+id/nav_two"
+            android:title="     Two"
+            android:visible="false" />
+        <item
+            android:id="@+id/nav_three"
+            android:title="     Three"
+            android:visible="false" />
+        <item
+            android:id="@+id/nav_four"
+            android:title="     Four"
+            android:visible="false" />
+        <item
+            android:id="@+id/nav_accessories"
+            android:title="ACCESSORIES" />
+        <item
+            android:id="@+id/nav_five"
+            android:title="     Five"
+            android:visible="false" />
+        <item
+            android:id="@+id/nav_six"
+            android:title="     Six"
+            android:visible="false" />
+        <item
+            android:id="@+id/nav_seven"
+            android:title="     Seven"
+            android:visible="false" />
+        <item
+            android:id="@+id/nav_eight"
+            android:title="     Eight"
+            android:visible="false" />
+        <item
+            android:id="@+id/nav_new"
+            android:title="NEW" />
+        <item
+            android:id="@+id/nav_sale"
+            android:title="SALE" />
+        <item
+            android:id="@+id/nav_certificate"
+            android:title="GIFT CERTIFICATE" />
+    </group>
+
+    <!--<item android:title="Communicate">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_share"-->
+                <!--android:icon="@drawable/ic_menu_share"-->
+                <!--android:title="Share" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_send"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="Send" />-->
+        <!--</menu>-->
+    <!--</item>-->
+
+</menu>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name"> Southwest</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_login">Login</string>
+    <string name="action_search">Search</string>
+    <string name="action_cart">Cart</string>
+    <string name="action_Edit">Edit</string>
+    <string name="action_Logout">Logout</string>
+    <string name="img_placeholder">IMG_PLACEHOLDER</string>
+    <string name="shop_now">SHOP NOW</string>
+    <string name="social_text_msg">ARE YOU ROCKING MAGENTA? JOIN THE SOCIAL CONVERSATION AND SHARE YOUR #BEMAGENTA PICS!</string>
+    <string name="twitterimage">TwitterImage</string>
+    <string name="instagramimage">InstagramImage</string>
+
+    <!-- Common Errors -->
+    <string name="error_no_network">No network connection found</string>
+    <string name="snack_bar_action_close">CLOSE</string>
+    <string name="no_email_client">Email client not found.</string>
+
+
+    <string name="error_timeout">TimOut or Network error</string>
+    <string name="error_auth_failure_error">AuthFailureError</string>
+    <string name="error_server">ServerError</string>
+    <string name="error_network">Network Error</string>
+    <string name="error_no_connection">No Connection Error</string>
+    <string name="error_parse">Parse Error</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="my_wishlist">My Wishlist</string>
+</resources>
