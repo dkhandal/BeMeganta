@@ -66,6 +66,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
                 Toast.makeText(ItemDetailsActivity.this,"Item added to cart.", Toast.LENGTH_SHORT).show();
                 MainActivity.notificationCountCart++;
                 NotificationCountSetClass.setNotifyCount(MainActivity.notificationCountCart);
+                finish();
             }
         });
 
