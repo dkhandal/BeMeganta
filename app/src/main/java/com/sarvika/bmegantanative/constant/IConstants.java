@@ -9,7 +9,7 @@ public class IConstants {
     public static final String TAG = "BeMeganta";
 
 
-    public static final String storeBase = "https://192.168.0.100/preview/";
+    public static final String storeBase = "https://192.168.0.100/preview/"; //https://shopstar-clone.halo.com/preview //shopstar2-test.halo.com
     public static final String suffixJsonType = "tpt=json_en";
     public static final String urlCategory = storeBase + "swademo"; //mystore2
 

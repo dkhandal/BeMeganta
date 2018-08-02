@@ -46,21 +46,79 @@
                     android:textColor="@color/colorBlack"
                     android:textSize="16dp" />
 
-                <TextView
-                    android:id="@+id/prod_price"
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--&gt;-->
+
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="$ 1979.00"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="20dp" />
+
+                    android:background="@drawable/shape_rectangle"
+
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center_vertical"
+                        android:text="$"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:id="@+id/prod_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center_vertical"
+                        android:text="1979.00"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="20dp" />
+
+                    <android.support.v4.widget.Space
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent" />
+
+                    <Button
+                        android:id="@+id/decrease"
+                        android:layout_width="40dp"
+                        android:layout_height="35dp"
+                        android:onClick="decreaseInteger"
+                        android:layout_gravity="right"
+                        android:text="-" />
+
+                    <TextView
+                        android:id="@+id/integer_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_gravity="right"
+                        android:text="1"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/increase"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:onClick="increaseInteger"
+                        android:layout_gravity="right"
+                        android:text="+" />
+                </LinearLayout>
+
+             <!--   </LinearLayout>-->
+
+
 
                 <TextView
-                    android:id="@+id/delivery_type"
+                    android:id="@+id/desc_long"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="FREE Delivery"
+                    android:text="Desc Long"
                     android:textSize="12dp" />
             </LinearLayout>
 
@@ -69,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="5dp">
 
                 <TextView android:id="@+id/text_ratings"
                           android:layout_width="wrap_content"
@@ -90,6 +148,9 @@
                           android:layout_marginLeft="12dp"
                           android:text="50 ratings \u0026 15 reviews"
                           android:textSize="12dp"/>
+
+
+
 
             </LinearLayout>/
         <View android:layout_width="match_parent"

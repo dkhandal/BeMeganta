@@ -100,7 +100,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-//https://www.raywenderlich.com/127544/android-gridview-getting-started
+
+    //https://www.raywenderlich.com/127544/android-gridview-getting-started
     private NavigationView navigationView;
 
     // Log tag
@@ -162,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String PROD_PRICE = "ProdPrice";
     public static final String ITEM_OBJECT = "ItemObject";
     public static int notificationCountCart = 0;
+    public static final String WISH_LIST = "WishList";
+    public static final String ITEM_URL = "ItemUrl";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -470,11 +473,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Item item = items[position];
 
                     Intent intent = new Intent(MainActivity.this, ItemDetailsActivity.class);
-                    intent.putExtra(STRING_IMAGE_URI, items[position].getImageUrl());
-                    intent.putExtra(STRING_IMAGE_POSITION, position);
-                    String price = itemBeanList.get(position).getCurrencySign() + " " + itemBeanList.get(position).getPrice().getValue().getInteger() + "." + itemBeanList.get(position).getPrice().getValue().getDecimal();
-                    intent.putExtra(PROD_NAME,item.getItemName());
-                    intent.putExtra(PROD_PRICE,price);
+                    intent.putExtra(ITEM_URL, itemBeanList.get(position).getUrl());
+//                    intent.putExtra(STRING_IMAGE_URI, items[position].getImageUrl());
+//                    intent.putExtra(STRING_IMAGE_POSITION, position);
+//                    String price = itemBeanList.get(position).getCurrencySign() + " " + itemBeanList.get(position).getPrice().getValue().getInteger() + "." + itemBeanList.get(position).getPrice().getValue().getDecimal();
+//                    intent.putExtra(PROD_NAME,item.getItemName());
+//                    intent.putExtra(PROD_PRICE,price);
                     intent.putExtra(ITEM_OBJECT,item);
 
                     startActivity(intent);
@@ -620,6 +624,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.search: //1:
                 msg = "Search";
+                startActivity(new Intent(MainActivity.this, SearchResultActivity.class));
                 break;
             case R.id.cart: //2:
                 msg = "Cart";
@@ -634,7 +639,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 msg = "Logout";
                 break;
         }
-        Toast.makeText(this,msg+" Checked",Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,msg+" Checked",Toast.LENGTH_LONG).show();
 
         return super.onOptionsItemSelected(item);
     }
@@ -1033,6 +1038,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Creating volley request obj
         String urlCat = IConstants.urlCategory + "?vid=" + vid + "&" + IConstants.suffixJsonType;
 
+        Utilities.showProgressDialog(MainActivity.this,"Loading",false,ProgressDialog.STYLE_SPINNER);
+
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
                 urlCat, null,
                 new Response.Listener<JSONObject>() {
@@ -1040,7 +1047,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, response.toString());
-                        hidePDialog();
+                        Utilities.hideProgressDialog();
                         if(!TextUtils.isEmpty(response.toString())){
                         try {
 
@@ -1140,6 +1147,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         }catch (JSONException je) {
                             Log.e("Error: ","" + je.getLocalizedMessage());
+                            Utilities.hideProgressDialog();
                         }
                         }// TextUtil
                     }
@@ -1150,7 +1158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),""+ error.getMessage() , Toast.LENGTH_LONG).show();
                 // hide the progress dialog
-                hidePDialog();
+                Utilities.hideProgressDialog();
             }
         });
 
