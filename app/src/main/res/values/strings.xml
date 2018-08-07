@@ -46,4 +46,12 @@
     </string>
     <string name="my_wishlist">My Wishlist</string>
     <string name="search_hint">Search for Products, Brands and More</string>
+
+    <string-array name="item_array">
+        <item>Cappuccino</item>
+        <item>Espresso</item>
+        <item>Mocha</item>
+        <item>Caffè Americano</item>
+        <item>Cafe Zorro</item>
+    </string-array>
 </resources>

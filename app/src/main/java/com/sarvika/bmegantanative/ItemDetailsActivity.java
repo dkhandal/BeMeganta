@@ -49,6 +49,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
     TextView textViewBuyNow;
     TextView textViewProdName;
     TextView textViewProdPrice;
+    TextView textViewItemCode;
     TextView textDescLong;
 
     private static final String TAG = ItemDetailsActivity.class.getSimpleName();
@@ -64,13 +65,14 @@ public class ItemDetailsActivity extends AppCompatActivity {
         textViewBuyNow = (TextView)findViewById(R.id.text_action_bottom2);
         textViewProdName = (TextView)findViewById(R.id.prod_name);
         textViewProdPrice = (TextView)findViewById(R.id.prod_price);
+        textViewItemCode = (TextView) findViewById(R.id.prod_code);
         textDescLong = (TextView) findViewById(R.id.desc_long);
         LinearLayout linearLayoutAction1 = (LinearLayout)findViewById(R.id.layout_action1);
         LinearLayout linearLayoutAction2 = (LinearLayout)findViewById(R.id.layout_action2);
         LinearLayout linearLayoutAction3 = (LinearLayout)findViewById(R.id.layout_action3);
 
         //Getting image uri from previous screen
-        if (getIntent() != null) {
+        if (getIntent().getExtras() != null) {
             itemUrl = getIntent().getStringExtra(MainActivity.ITEM_URL);
 //            stringImageUri = getIntent().getStringExtra(MainActivity.STRING_IMAGE_URI);
 //            imagePosition = getIntent().getIntExtra(MainActivity.STRING_IMAGE_POSITION,0);
@@ -157,7 +159,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
             }
         });
 
-
+        Log.d(TAG, "onCreat called");
 
     }
 
@@ -212,9 +214,10 @@ public class ItemDetailsActivity extends AppCompatActivity {
                             try {
                                 stringImageUri = response.getString("image");
                                 Glide.with(ItemDetailsActivity.this).load(IConstants.storeBase +"store" + stringImageUri).into(mImageView);
-                                textViewProdName.setText(response.getString("desc_short"));
+                                textViewProdName.setText(response.getString("title"));
                                 priceValue = Float.valueOf(response.getString("price"));
                                 textViewProdPrice.setText("" +response.getString("price"));
+                                textViewItemCode.setText(""+response.getString("item_code"));
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                                     textDescLong.setText(Html.fromHtml(response.getString("desc_long"),Html.FROM_HTML_MODE_LEGACY));
                                 } else {
@@ -225,11 +228,6 @@ public class ItemDetailsActivity extends AppCompatActivity {
                                 e.printStackTrace();
                                 Utilities.hideProgressDialog();
                             }
-                            //            stringImageUri = getIntent().getStringExtra(MainActivity.STRING_IMAGE_URI);
-//            imagePosition = getIntent().getIntExtra(MainActivity.STRING_IMAGE_POSITION,0);
-//            textViewProdName.setText(getIntent().getStringExtra(MainActivity.PROD_NAME));
-//            textViewProdPrice.setText(getIntent().getStringExtra(MainActivity.PROD_PRICE));
-
                         }// TextUtil
                     }
                 }, new Response.ErrorListener() {

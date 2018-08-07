@@ -43,17 +43,33 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Denim Shirt"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="@color/grey_dark"
                     android:textSize="16dp" />
 
-                <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--&gt;-->
+                <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Product Code:"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="16dp" />
+                    <TextView
+                        android:id="@+id/prod_code"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="SWA0000"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="16dp" />
+
+                </LinearLayout>
 
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
                     android:background="@drawable/shape_rectangle"
@@ -107,10 +123,20 @@
                         android:onClick="increaseInteger"
                         android:layout_gravity="right"
                         android:text="+" />
+
+                    <android.support.v4.widget.Space
+                        android:layout_width="10dp"
+                        android:layout_height="match_parent" />
+
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:drawable/btn_dropdown"
+                        android:entries="@array/item_array" />
                 </LinearLayout>
 
              <!--   </LinearLayout>-->
-
 
 
                 <TextView
@@ -119,7 +145,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Desc Long"
+                    android:textColor="@color/colorBlack"
                     android:textSize="12dp" />
+
+
             </LinearLayout>
 
 

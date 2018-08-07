@@ -173,8 +173,8 @@ public class Utilities {
 
     public static void hideProgressDialog() {
         if (pDialog !=null && pDialog.isShowing()) {
-            pDialog.hide();
-//            pDialog.dismiss();
+           // pDialog.hide();
+            pDialog.dismiss();
             pDialog = null;
         }
     }
