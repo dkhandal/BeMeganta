@@ -94,34 +94,34 @@
                         android:textSize="20dp" />
 
                     <android.support.v4.widget.Space
-                        android:layout_width="50dp"
+                        android:layout_width="20dp"
                         android:layout_height="match_parent" />
 
                     <Button
                         android:id="@+id/decrease"
                         android:layout_width="40dp"
-                        android:layout_height="35dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="right|center_vertical"
                         android:onClick="decreaseInteger"
-                        android:layout_gravity="right"
                         android:text="-" />
 
                     <TextView
                         android:id="@+id/integer_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:layout_gravity="right"
                         android:text="1"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/increase"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="right|center_vertical"
                         android:onClick="increaseInteger"
-                        android:layout_gravity="right"
                         android:text="+" />
 
                     <android.support.v4.widget.Space

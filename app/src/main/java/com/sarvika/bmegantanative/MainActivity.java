@@ -37,6 +37,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -1161,6 +1162,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Utilities.hideProgressDialog();
             }
         });
+
+        // Timeout error
+        int MY_SOCKET_TIMEOUT_MS=1000;
+        jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
+                MY_SOCKET_TIMEOUT_MS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
 
         // Adding request to request queue

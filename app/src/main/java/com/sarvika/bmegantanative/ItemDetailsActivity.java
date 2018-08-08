@@ -219,9 +219,9 @@ public class ItemDetailsActivity extends AppCompatActivity {
                                 textViewProdPrice.setText("" +response.getString("price"));
                                 textViewItemCode.setText(""+response.getString("item_code"));
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                                    textDescLong.setText(Html.fromHtml(response.getString("desc_long"),Html.FROM_HTML_MODE_LEGACY));
+                                    textDescLong.setText(Html.fromHtml(response.getString("desc_long").toString(),Html.FROM_HTML_MODE_LEGACY));
                                 } else {
-                                    textDescLong.setText(Html.fromHtml(response.getString("desc_long")));
+                                    textDescLong.setText(Html.fromHtml(response.getString("desc_long").toString()));
                                 }
 
                             } catch (JSONException e) {
