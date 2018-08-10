@@ -8,8 +8,10 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,8 @@ import com.bumptech.glide.Glide;
 import com.sarvika.bmegantanative.app.AppController;
 import com.sarvika.bmegantanative.com.sarvika.notification.NotificationCountSetClass;
 import com.sarvika.bmegantanative.constant.IConstants;
+import com.sarvika.bmegantanative.model.AttributeDataValue;
+import com.sarvika.bmegantanative.model.Attributes;
 import com.sarvika.bmegantanative.model.CategoryBean;
 import com.sarvika.bmegantanative.model.Item;
 import com.sarvika.bmegantanative.model.Prop;
@@ -34,6 +38,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class ItemDetailsActivity extends AppCompatActivity {
@@ -44,13 +49,14 @@ public class ItemDetailsActivity extends AppCompatActivity {
     String itemUrl;
     Float priceValue;
 
-    ImageView mImageView;
-    TextView textViewAddToCart;
-    TextView textViewBuyNow;
-    TextView textViewProdName;
-    TextView textViewProdPrice;
-    TextView textViewItemCode;
-    TextView textDescLong;
+    private ImageView mImageView;
+    private TextView textViewAddToCart;
+    private TextView textViewBuyNow;
+    private TextView textViewProdName;
+    private TextView textViewProdPrice;
+    private TextView textViewItemCode;
+    private TextView textDescLong;
+    private Spinner spinnerSize;
 
     private static final String TAG = ItemDetailsActivity.class.getSimpleName();
     private static final String INCREMENT = "Increment";
@@ -70,6 +76,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
         LinearLayout linearLayoutAction1 = (LinearLayout)findViewById(R.id.layout_action1);
         LinearLayout linearLayoutAction2 = (LinearLayout)findViewById(R.id.layout_action2);
         LinearLayout linearLayoutAction3 = (LinearLayout)findViewById(R.id.layout_action3);
+        spinnerSize = (Spinner) findViewById(R.id.spinnerSize);
 
         //Getting image uri from previous screen
         if (getIntent().getExtras() != null) {
@@ -223,6 +230,70 @@ public class ItemDetailsActivity extends AppCompatActivity {
                                 } else {
                                     textDescLong.setText(Html.fromHtml(response.getString("desc_long").toString()));
                                 }
+                                List <Attributes> attributeList = new ArrayList<Attributes>();
+
+                                List<String> colorList = new ArrayList<String>();
+                                List<String> sizeList = new ArrayList<String>();
+
+                                JSONArray attributesArray= response.getJSONArray("attributes");
+                                for(int i=0;i<attributesArray.length();i++){
+                                    Attributes attributes = new Attributes();
+                                    JSONObject objectAtt= attributesArray.getJSONObject(i);
+                                    attributes.setAttributee_id(objectAtt.getString("attributee_id"));
+                                    attributes.setAttribute_name(objectAtt.getString("attribute_name"));
+                                    attributes.setAttribute_type(objectAtt.getString("attribute_type"));
+                                    attributes.setAttribute_dataname(objectAtt.getString("attribute_dataname"));
+                                    attributes.setAttribute_screenname(objectAtt.getString("attribute_screenname"));
+                                    attributes.setAttribute_dropname(objectAtt.getString("attribute_dropname"));
+                                    if(i != 0) {
+                                        sizeList.add(attributes.getAttribute_dropname());
+                                    }else{
+                                        colorList.add(attributes.getAttribute_dropname());
+                                    }
+
+                                    JSONArray attributesDataValue= objectAtt.getJSONArray("data_value");
+                                        for(int j=0;j<attributesDataValue.length();j++) {
+                                            AttributeDataValue attributeDataValue = new AttributeDataValue();
+                                            JSONObject objectDataValue= attributesDataValue.getJSONObject(j);
+                                            attributeDataValue.setOptionid(objectDataValue.getString("optionid"));
+                                            attributeDataValue.setDdtext(objectDataValue.getString("ddtext"));
+                                            Log.d("Deepak",attributeDataValue.getDdtext());
+                                            attributeDataValue.setCode(objectDataValue.getString("code"));
+                                            if(j != 0) {
+                                                sizeList.add(attributeDataValue.getDdtext());
+                                            }else{
+                                                colorList.add(attributeDataValue.getDdtext());
+                                            }
+                                            attributes.setData_value(attributeDataValue);
+                                        }
+                                    attributeList.add(attributes);
+                                }
+
+/*                                List<String> colorList = new ArrayList<String>();
+                                List<String> sizeList = new ArrayList<String>();
+                                for(int k=0;k<attributeList.size();k++) {
+                                    Attributes attributesObj = attributeList.get(k);
+                                    if(k == 0){
+                                        colorList.add(attributesObj.getAttribute_dropname());
+                                        colorList.add(attributesObj.getData_value().getDdtext());
+                                    }
+
+                                    if(k == 1){
+                                        sizeList.add(attributesObj.getAttribute_dropname());
+                                        sizeList.add(attributesObj.getData_value().getDdtext());
+                                    }
+                                }*/
+
+
+
+                                // Creating adapter for spinner
+                                ArrayAdapter sizeAdapter = new ArrayAdapter(ItemDetailsActivity.this, android.R.layout.simple_spinner_item, sizeList);
+
+                                // Drop down layout style - list view with radio button
+                                sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                                // attaching data adapter to spinner
+                                spinnerSize.setAdapter(sizeAdapter);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
