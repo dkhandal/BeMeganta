@@ -1,16 +1,27 @@
 package com.sarvika.bmegantanative;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,14 +32,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.sarvika.bmegantanative.app.AppController;
 import com.sarvika.bmegantanative.com.sarvika.notification.NotificationCountSetClass;
 import com.sarvika.bmegantanative.constant.IConstants;
 import com.sarvika.bmegantanative.model.AttributeDataValue;
 import com.sarvika.bmegantanative.model.Attributes;
-import com.sarvika.bmegantanative.model.CategoryBean;
 import com.sarvika.bmegantanative.model.Item;
-import com.sarvika.bmegantanative.model.Prop;
+import com.sarvika.bmegantanative.model.OfferPrices;
 import com.sarvika.bmegantanative.util.HttpsTrustManager;
 import com.sarvika.bmegantanative.util.Utilities;
 
@@ -37,13 +48,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 
-public class ItemDetailsActivity extends AppCompatActivity {
+public class ItemDetailsActivity extends AppCompatActivity  { //implements AdapterView.OnItemSelectedListener
     int imagePosition;
     String stringImageUri;
+    String stringImageUriSizeChart;
     Item item = null;
     int minteger = 1;
     String itemUrl;
@@ -56,11 +72,17 @@ public class ItemDetailsActivity extends AppCompatActivity {
     private TextView textViewProdPrice;
     private TextView textViewItemCode;
     private TextView textDescLong;
-    private Spinner spinnerSize;
+//    private Spinner spinnerSize;
+//    private Spinner spinnerColor;
+
+    private TextView txtLink;
 
     private static final String TAG = ItemDetailsActivity.class.getSimpleName();
     private static final String INCREMENT = "Increment";
     private static final String DECREMENT = "Decrement";
+    public int spinnerCounter = 0;
+    boolean isFirstColor = true;
+    boolean isFirstSize = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +98,15 @@ public class ItemDetailsActivity extends AppCompatActivity {
         LinearLayout linearLayoutAction1 = (LinearLayout)findViewById(R.id.layout_action1);
         LinearLayout linearLayoutAction2 = (LinearLayout)findViewById(R.id.layout_action2);
         LinearLayout linearLayoutAction3 = (LinearLayout)findViewById(R.id.layout_action3);
-        spinnerSize = (Spinner) findViewById(R.id.spinnerSize);
+//        spinnerSize = (Spinner) findViewById(R.id.spinnerSize);
+//        spinnerColor = (Spinner)findViewById(R.id.spinnerColor);
+
+
+        txtLink = (TextView) findViewById(R.id.txtLink);
+
+        // Spinner click listener
+//        spinnerSize.setOnItemSelectedListener(this);
+//        spinnerColor.setOnItemSelectedListener(this);
 
         //Getting image uri from previous screen
         if (getIntent().getExtras() != null) {
@@ -203,6 +233,12 @@ public class ItemDetailsActivity extends AppCompatActivity {
 
 
     private void showItemDetails(String url){
+
+        if(!Utilities.isNetworkAvailable(ItemDetailsActivity.this)) {
+            Utilities.showNoNetworkSnackBar(getWindow().getDecorView().getRootView());
+            return;
+        }
+
         HttpsTrustManager.allowAllSSL();
         // Creating volley request obj
         String urlCat = IConstants.storeBase + url + "?" + IConstants.suffixJsonType;
@@ -221,6 +257,7 @@ public class ItemDetailsActivity extends AppCompatActivity {
                             try {
                                 stringImageUri = response.getString("image");
                                 Glide.with(ItemDetailsActivity.this).load(IConstants.storeBase +"store" + stringImageUri).into(mImageView);
+                                stringImageUriSizeChart = IConstants.storeBase +"store" + response.getString("sizechart");
                                 textViewProdName.setText(response.getString("title"));
                                 priceValue = Float.valueOf(response.getString("price"));
                                 textViewProdPrice.setText("" +response.getString("price"));
@@ -231,9 +268,8 @@ public class ItemDetailsActivity extends AppCompatActivity {
                                     textDescLong.setText(Html.fromHtml(response.getString("desc_long").toString()));
                                 }
                                 List <Attributes> attributeList = new ArrayList<Attributes>();
-
-                                List<String> colorList = new ArrayList<String>();
-                                List<String> sizeList = new ArrayList<String>();
+                                List<String> mixAttribute = new ArrayList<String>();
+                                mixAttribute.add(textViewItemCode.getText().toString());
 
                                 JSONArray attributesArray= response.getJSONArray("attributes");
                                 for(int i=0;i<attributesArray.length();i++){
@@ -245,55 +281,137 @@ public class ItemDetailsActivity extends AppCompatActivity {
                                     attributes.setAttribute_dataname(objectAtt.getString("attribute_dataname"));
                                     attributes.setAttribute_screenname(objectAtt.getString("attribute_screenname"));
                                     attributes.setAttribute_dropname(objectAtt.getString("attribute_dropname"));
-                                    if(i != 0) {
-                                        sizeList.add(attributes.getAttribute_dropname());
-                                    }else{
-                                        colorList.add(attributes.getAttribute_dropname());
-                                    }
 
+                                    mixAttribute.add(objectAtt.getString("attribute_dropname"));
+
+                                    ArrayList<AttributeDataValue> attributeDataValue2 = new ArrayList<AttributeDataValue>();
                                     JSONArray attributesDataValue= objectAtt.getJSONArray("data_value");
                                         for(int j=0;j<attributesDataValue.length();j++) {
-                                            AttributeDataValue attributeDataValue = new AttributeDataValue();
+
                                             JSONObject objectDataValue= attributesDataValue.getJSONObject(j);
-                                            attributeDataValue.setOptionid(objectDataValue.getString("optionid"));
-                                            attributeDataValue.setDdtext(objectDataValue.getString("ddtext"));
-                                            Log.d("Deepak",attributeDataValue.getDdtext());
-                                            attributeDataValue.setCode(objectDataValue.getString("code"));
-                                            if(j != 0) {
-                                                sizeList.add(attributeDataValue.getDdtext());
-                                            }else{
-                                                colorList.add(attributeDataValue.getDdtext());
-                                            }
-                                            attributes.setData_value(attributeDataValue);
+                                            AttributeDataValue attributeDataValueObj = new AttributeDataValue();
+                                            attributeDataValueObj.setOptionid(objectDataValue.getString("optionid"));
+                                            attributeDataValueObj.setDdtext(objectDataValue.getString("ddtext"));
+                                            attributeDataValueObj.setCode(objectDataValue.getString("code"));
+
+                                            attributeDataValue2.add(attributeDataValueObj);
+                                            attributes.setData_value(attributeDataValue2);
                                         }
                                     attributeList.add(attributes);
                                 }
 
-/*                                List<String> colorList = new ArrayList<String>();
-                                List<String> sizeList = new ArrayList<String>();
-                                for(int k=0;k<attributeList.size();k++) {
-                                    Attributes attributesObj = attributeList.get(k);
-                                    if(k == 0){
-                                        colorList.add(attributesObj.getAttribute_dropname());
-                                        colorList.add(attributesObj.getData_value().getDdtext());
+                                final List <OfferPrices> offerPricesList = new ArrayList<OfferPrices>();
+                                JSONArray offerPriceArray = response.getJSONArray("offerprice");
+                                for(int i=0;i<offerPriceArray.length();i++){
+                                    OfferPrices offerPrices = new OfferPrices();
+                                    JSONObject objectofferPrice = offerPriceArray.getJSONObject(i);
+                                    offerPrices.setItemcode(objectofferPrice.getString("itemcode"));
+                                    offerPrices.setItemprice(objectofferPrice.getString("itemprice"));
+                                    offerPrices.setCurrencyid(objectofferPrice.getString("currencyid"));
+                                    offerPricesList.add(offerPrices);
+                                }
+
+                                if(attributeList.size() > 0) {
+//                                    spinnerColor.setVisibility(View.VISIBLE);
+//                                    spinnerSize.setVisibility(View.VISIBLE);
+
+                                    txtLink.setVisibility(View.VISIBLE);
+
+                                    LinearLayout linearLayoutSpinner = findViewById(R.id.layoutSpinner);
+//                                    final Spinner spinnerColor = new Spinner(ItemDetailsActivity.this);
+//                                    spinnerColor.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                                    final Spinner spinnerSize = new Spinner(ItemDetailsActivity.this);
+//                                    spinnerSize.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+
+//                                    final List<AttributeDataValue> attributeDataSizeList = new ArrayList<AttributeDataValue>();
+                                    List<String> sizeList = new ArrayList<String>();
+                                    for (int k = 0; k < attributeList.size() ; k++) {
+                                         List<AttributeDataValue> attributeDataColorList = new ArrayList<AttributeDataValue>();
+                                         Spinner spinner = new Spinner(ItemDetailsActivity.this);
+                                        spinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                                        Random r = new Random();
+//                                        int randomNumber = r.nextInt(100);
+//                                        spinner.setId(randomNumber * k);
+
+                                        Attributes attributesObj = attributeList.get(k);
+
+                                            AttributeDataValue attributeDataValue1 = new AttributeDataValue();
+                                            attributeDataValue1.setDdtext(attributesObj.getAttribute_dropname());
+                                            attributeDataColorList.add(attributeDataValue1);
+
+                                            for (int l = 0; l < attributesObj.getData_value().size(); l++) {
+
+                                                attributeDataColorList.add(attributesObj.getData_value().get(l));
+
+                                            }
+                                            ArrayAdapter colorAdapter = new ArrayAdapter(ItemDetailsActivity.this, android.R.layout.simple_spinner_item, attributeDataColorList);
+                                            colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                            spinner.setAdapter(colorAdapter);
+                                            spinner.setBackgroundResource(android.R.drawable.btn_dropdown);
+
+                                        linearLayoutSpinner.addView(spinner);
+
                                     }
 
-                                    if(k == 1){
-                                        sizeList.add(attributesObj.getAttribute_dropname());
-                                        sizeList.add(attributesObj.getData_value().getDdtext());
+                                    if(attributeList.size() > 2){
+                                        linearLayoutSpinner.setOrientation(LinearLayout.VERTICAL);
+                                    }else{
+                                        linearLayoutSpinner.setOrientation(LinearLayout.HORIZONTAL);
                                     }
-                                }*/
+
+
+//                                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                                        @Override
+//                                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                                            if(isFirstColor) {
+//                                                isFirstColor = false;
+//                                            }else{
+//                                                Toast.makeText(ItemDetailsActivity.this, "Selected Item:" + " " + attributeDataColorList.get(position).getDdtext(), Toast.LENGTH_SHORT).show();
+//                                            }
+//                                        }
+//
+//                                        @Override
+//                                        public void onNothingSelected(AdapterView<?> parent) {
+//                                        }
+//                                    });
+//
+//                                    spinnerSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                                        @Override
+//                                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                                            if(isFirstSize) {
+//                                                isFirstSize = false;
+//                                            }else{
+//                                                //Toast.makeText(ItemDetailsActivity.this, "Selected Item:" + " " + attributeDataSizeList.get(position).getDdtext(), Toast.LENGTH_SHORT).show();
+//
+//                                                    for(OfferPrices op : offerPricesList){
+//                                                        if(op.getItemcode() != null && op.getItemcode().contains(attributeDataSizeList.get(position).getCode())){
+//                                                            Toast.makeText(ItemDetailsActivity.this, "Selected Price:" + " " + op.getItemprice(), Toast.LENGTH_SHORT).show();
+//                                                        }
+//
+//
+//                                                    }
+//                                            }
+//                                        }
+//
+//                                        @Override
+//                                        public void onNothingSelected(AdapterView<?> parent) {
+//                                        }
+//                                    });
 
 
 
-                                // Creating adapter for spinner
-                                ArrayAdapter sizeAdapter = new ArrayAdapter(ItemDetailsActivity.this, android.R.layout.simple_spinner_item, sizeList);
 
-                                // Drop down layout style - list view with radio button
-                                sizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                }else{
+//                                    spinnerColor.setVisibility(View.GONE);
+//                                    spinnerSize.setVisibility(View.GONE);
 
-                                // attaching data adapter to spinner
-                                spinnerSize.setAdapter(sizeAdapter);
+                                    txtLink.setVisibility(View.INVISIBLE);
+                                }
+
+
+
+
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -316,4 +434,61 @@ public class ItemDetailsActivity extends AppCompatActivity {
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonObjReqItemDetail);
     }
+
+//    @Override
+//    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//        spinnerCounter = spinnerCounter + 1;
+//        String item = parent.getItemAtPosition(position).toString();
+//
+//        switch(parent.getId()) {
+//            case R.id.spinnerColor:
+//                // Showing selected spinner item
+//                if(spinnerCounter > 4) {
+//                    Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+//                }
+//                break;
+//             case R.id.spinnerSize:
+//                 // Showing selected spinner item
+//                 if(spinnerCounter > 4) {
+//                     Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+//                 }
+//                 break;
+//        }
+//
+//    }
+//
+//    @Override
+//    public void onNothingSelected(AdapterView<?> parent) {
+//
+//    }
+
+
+    public void onClickSizeChart(View v)
+    {
+
+        final Dialog nagDialog = new Dialog(ItemDetailsActivity.this,android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+        nagDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        nagDialog.setCancelable(true);
+        nagDialog.setContentView(R.layout.preview_image);
+        Button btnClose = (Button)nagDialog.findViewById(R.id.btnIvClose);
+        ImageView ivPreview = (ImageView)nagDialog.findViewById(R.id.iv_preview_image);
+
+        Glide.with(ItemDetailsActivity.this).load(stringImageUriSizeChart).apply(RequestOptions.placeholderOf(R.drawable.no_image)).into(ivPreview);
+
+        PhotoViewAttacher pAttacher;
+        pAttacher = new PhotoViewAttacher(ivPreview);
+        pAttacher.update();
+
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+
+                nagDialog.dismiss();
+            }
+        });
+        nagDialog.show();
+
+    }
+
+
 }

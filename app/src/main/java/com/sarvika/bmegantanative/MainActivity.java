@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.GridView;
@@ -154,9 +155,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     String vid = "20170504134";//"20170504134";//"20180531204"; "20171004499"
 
-    GridView gridView;
-    Item[] items;
-    ItemAdapter itemAdapter;
+    private GridView gridView;
+    private Item[] items;
+    private ItemAdapter itemAdapter;
+    private Button tryNow;
 
     public static final String STRING_IMAGE_URI = "ImageUri";
     public static final String STRING_IMAGE_POSITION = "ImagePosition";
@@ -229,6 +231,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.lvExp);
+        tryNow = (Button) findViewById(R.id.id_trynow);
+
+        tryNow.setOnClickListener(new View.OnClickListener(){
+            @Override
+            //On click function
+            public void onClick(View view) {
+                prepareListData1();
+            }
+        });
 
         prepareListData1();
 
@@ -1035,6 +1046,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void prepareListData1(){
+
+        if(!Utilities.isNetworkAvailable(MainActivity.this)) {
+            Utilities.showNoNetworkSnackBar(getWindow().getDecorView().getRootView());
+            return;
+        }
+
         HttpsTrustManager.allowAllSSL();
         // Creating volley request obj
         String urlCat = IConstants.urlCategory + "?vid=" + vid + "&" + IConstants.suffixJsonType;
@@ -1053,6 +1070,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         try {
 
                             if (response != null) {
+                                tryNow.setVisibility(View.INVISIBLE);
 
                                 final ArrayList<CategoryBean> categoryList= new ArrayList<CategoryBean>();
                                 if (response.length() > 0) {
@@ -1149,6 +1167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }catch (JSONException je) {
                             Log.e("Error: ","" + je.getLocalizedMessage());
                             Utilities.hideProgressDialog();
+                            tryNow.setVisibility(View.VISIBLE);
                         }
                         }// TextUtil
                     }
@@ -1160,6 +1179,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(getApplicationContext(),""+ error.getMessage() , Toast.LENGTH_LONG).show();
                 // hide the progress dialog
                 Utilities.hideProgressDialog();
+                tryNow.setVisibility(View.VISIBLE);
             }
         });
 

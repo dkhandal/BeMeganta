@@ -1,5 +1,7 @@
 package com.sarvika.bmegantanative.model;
 
+import java.util.ArrayList;
+
 public class Attributes {
 
     private String attributee_id;
@@ -8,7 +10,7 @@ public class Attributes {
     private String attribute_dataname;
     private String attribute_screenname;
     private String attribute_dropname;
-    private AttributeDataValue data_value;
+    private ArrayList<AttributeDataValue> data_value;
 
     public String getAttributee_id() {
         return attributee_id;
@@ -58,11 +60,11 @@ public class Attributes {
         this.attribute_dropname = attribute_dropname;
     }
 
-    public AttributeDataValue getData_value() {
+    public ArrayList<AttributeDataValue> getData_value() {
         return data_value;
     }
 
-    public void setData_value(AttributeDataValue data_value) {
+    public void setData_value(ArrayList<AttributeDataValue> data_value) {
         this.data_value = data_value;
     }
 }

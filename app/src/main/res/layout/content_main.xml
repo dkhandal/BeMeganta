@@ -11,13 +11,24 @@
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:columnWidth="150dp"
-        android:numColumns="2"
-        android:verticalSpacing="24dp"
+        android:gravity="center"
         android:horizontalSpacing="10dp"
+        android:numColumns="2"
         android:stretchMode="spacingWidthUniform"
-        />
+        android:verticalSpacing="24dp" />
+
+    <Button
+        android:id="@+id/id_trynow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:background="@android:color/background_dark"
+        android:text="Try Again"
+        android:textColor="@color/colorWhite"
+        android:visibility="invisible" />
 </RelativeLayout>
 
     <!--"auto_fit"-->

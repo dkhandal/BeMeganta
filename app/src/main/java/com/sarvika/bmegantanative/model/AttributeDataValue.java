@@ -31,7 +31,10 @@ public class AttributeDataValue {
 
 
 
-
+    @Override
+    public String toString() {
+        return ddtext;
+    }
 
 
 }
