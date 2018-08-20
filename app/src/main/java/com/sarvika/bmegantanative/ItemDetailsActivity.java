@@ -268,8 +268,7 @@ public class ItemDetailsActivity extends AppCompatActivity  { //implements Adapt
                                     textDescLong.setText(Html.fromHtml(response.getString("desc_long").toString()));
                                 }
                                 List <Attributes> attributeList = new ArrayList<Attributes>();
-                                List<String> mixAttribute = new ArrayList<String>();
-                                mixAttribute.add(textViewItemCode.getText().toString());
+
 
                                 JSONArray attributesArray= response.getJSONArray("attributes");
                                 for(int i=0;i<attributesArray.length();i++){
@@ -282,7 +281,7 @@ public class ItemDetailsActivity extends AppCompatActivity  { //implements Adapt
                                     attributes.setAttribute_screenname(objectAtt.getString("attribute_screenname"));
                                     attributes.setAttribute_dropname(objectAtt.getString("attribute_dropname"));
 
-                                    mixAttribute.add(objectAtt.getString("attribute_dropname"));
+
 
                                     ArrayList<AttributeDataValue> attributeDataValue2 = new ArrayList<AttributeDataValue>();
                                     JSONArray attributesDataValue= objectAtt.getJSONArray("data_value");
@@ -318,40 +317,52 @@ public class ItemDetailsActivity extends AppCompatActivity  { //implements Adapt
                                     txtLink.setVisibility(View.VISIBLE);
 
                                     LinearLayout linearLayoutSpinner = findViewById(R.id.layoutSpinner);
-//                                    final Spinner spinnerColor = new Spinner(ItemDetailsActivity.this);
-//                                    spinnerColor.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//                                    final Spinner spinnerSize = new Spinner(ItemDetailsActivity.this);
-//                                    spinnerSize.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-
-//                                    final List<AttributeDataValue> attributeDataSizeList = new ArrayList<AttributeDataValue>();
+                                    final List<List<AttributeDataValue>> attributeDataListComplete = new ArrayList<List<AttributeDataValue>>();
                                     List<String> sizeList = new ArrayList<String>();
                                     for (int k = 0; k < attributeList.size() ; k++) {
-                                         List<AttributeDataValue> attributeDataColorList = new ArrayList<AttributeDataValue>();
+                                         final List<AttributeDataValue> attributeDataList = new ArrayList<AttributeDataValue>();
                                          Spinner spinner = new Spinner(ItemDetailsActivity.this);
                                         spinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 //                                        Random r = new Random();
 //                                        int randomNumber = r.nextInt(100);
-//                                        spinner.setId(randomNumber * k);
+                                        spinner.setId(1000 * (k + 1));
 
                                         Attributes attributesObj = attributeList.get(k);
 
                                             AttributeDataValue attributeDataValue1 = new AttributeDataValue();
                                             attributeDataValue1.setDdtext(attributesObj.getAttribute_dropname());
-                                            attributeDataColorList.add(attributeDataValue1);
+                                            attributeDataList.add(attributeDataValue1);
 
                                             for (int l = 0; l < attributesObj.getData_value().size(); l++) {
 
-                                                attributeDataColorList.add(attributesObj.getData_value().get(l));
+                                                attributeDataList.add(attributesObj.getData_value().get(l));
 
                                             }
-                                            ArrayAdapter colorAdapter = new ArrayAdapter(ItemDetailsActivity.this, android.R.layout.simple_spinner_item, attributeDataColorList);
+                                            ArrayAdapter colorAdapter = new ArrayAdapter(ItemDetailsActivity.this, android.R.layout.simple_spinner_item, attributeDataList);
                                             colorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                             spinner.setAdapter(colorAdapter);
                                             spinner.setBackgroundResource(android.R.drawable.btn_dropdown);
 
+                                        attributeDataListComplete.add(attributeDataList);
+
                                         linearLayoutSpinner.addView(spinner);
 
+                                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                            @Override
+                                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                if(isFirstColor) {
+                                                    isFirstColor = false;
+                                                }else{
+                                                    Toast.makeText(ItemDetailsActivity.this, "Selected Item: " + parent.getId() + " " + attributeDataList.get(position).getDdtext(), Toast.LENGTH_SHORT).show();
+
+
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onNothingSelected(AdapterView<?> parent) {
+                                            }
+                                        });
                                     }
 
                                     if(attributeList.size() > 2){
@@ -359,6 +370,27 @@ public class ItemDetailsActivity extends AppCompatActivity  { //implements Adapt
                                     }else{
                                         linearLayoutSpinner.setOrientation(LinearLayout.HORIZONTAL);
                                     }
+
+                                    String codes = textViewItemCode.getText().toString();
+                                    for (int i=0;i < attributeDataListComplete.size(); i++){
+                                        List<AttributeDataValue> attributeDataList  = attributeDataListComplete.get(i);
+                                        for (int j=0;j < attributeDataList.size(); j++) {
+                                            AttributeDataValue attributeDataValue  = attributeDataList.get(j);
+                                            if(attributeDataValue.getCode() != null) {
+                                                //Log.d(TAG, attributeDataValue.getCode() );
+                                                codes = codes + " " + attributeDataValue.getCode() +"-" + attributeDataValue.getDdtext();
+                                            }
+//                                                            if(attributeDataValue.getCode().equalsIgnoreCase(attributeDataList.get(position).getCode())){
+//                                            OfferPrices offerPrices = offerPricesList.get(j);
+//                                            if(offerPrices.getItemcode().equalsIgnoreCase(attributeDataList.get(position).getCode())){
+//                                                Log.d(TAG,offerPrices.getItemprice());
+//                                            }
+//                                                            }
+                                        }
+
+                                    }
+
+                                    Log.d(TAG,codes);
 
 
 //                                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
