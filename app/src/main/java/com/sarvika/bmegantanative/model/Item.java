@@ -26,14 +26,18 @@ import java.io.Serializable;
 
 public class Item implements Serializable {
   private String itemName;
-  private String itemDescription;
+  private String itemPrice;
   private String imageUrl;
+  private String shortDescription;
+  private String itemUrl;
   private boolean isFavorite = false;
 
-  public Item(String itemName, String itemDescription, String imageUrl) {
+  public Item(String itemName, String itemPrice, String imageUrl, String shortDescription, String itemUrl) {
     this.itemName = itemName;
-    this.itemDescription = itemDescription;
+    this.itemPrice = itemPrice;
     this.imageUrl = imageUrl;
+    this.shortDescription = shortDescription;
+    this.itemUrl = itemUrl;
   }
 
   public String getItemName() {
@@ -44,12 +48,12 @@ public class Item implements Serializable {
     this.itemName = itemName;
   }
 
-  public String getItemDescription() {
-    return itemDescription;
+  public String getItemPrice() {
+    return itemPrice;
   }
 
-  public void setItemDescription(String itemDescription) {
-    this.itemDescription = itemDescription;
+  public void setItemPrice(String itemPrice) {
+    this.itemPrice = itemPrice;
   }
 
   public String getImageUrl() {
@@ -58,6 +62,14 @@ public class Item implements Serializable {
 
   public void setImageUrl(String imageUrl) {
     this.imageUrl = imageUrl;
+  }
+
+  public String getShortDescription() {
+    return shortDescription;
+  }
+
+  public void setShortDescription(String shortDescription) {
+    this.shortDescription = shortDescription;
   }
 
   public boolean getIsFavorite() {
@@ -70,5 +82,21 @@ public class Item implements Serializable {
 
   public void toggleFavorite() {
     isFavorite = !isFavorite;
+  }
+
+  public boolean isFavorite() {
+    return isFavorite;
+  }
+
+  public void setFavorite(boolean favorite) {
+    isFavorite = favorite;
+  }
+
+  public String getItemUrl() {
+    return itemUrl;
+  }
+
+  public void setItemUrl(String itemUrl) {
+    this.itemUrl = itemUrl;
   }
 }

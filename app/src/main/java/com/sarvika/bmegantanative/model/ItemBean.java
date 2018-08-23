@@ -6,6 +6,7 @@ public class ItemBean {
     private String code;
     private String title;
     private String teaser;
+    private String shortDesription;
     private Boolean trimmed;
     private String url;
     private String image;
@@ -156,5 +157,12 @@ public class ItemBean {
         this.price = price;
     }
 
+    public String getShortDesription() {
+        return shortDesription;
+    }
+
+    public void setShortDesription(String shortDesription) {
+        this.shortDesription = shortDesription;
+    }
 }
 

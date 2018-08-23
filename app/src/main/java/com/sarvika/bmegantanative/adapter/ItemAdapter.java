@@ -65,7 +65,7 @@ public class ItemAdapter extends BaseAdapter {
         // 4
         Glide.with(mContext).load(item.getImageUrl()).apply(RequestOptions.placeholderOf(R.drawable.loading_spinner)).into(imageView);
         nameTextView.setText(item.getItemName());
-        authorTextView.setText(item.getItemDescription());
+        authorTextView.setText(item.getItemPrice());
 
         imageViewFavorite.setOnClickListener(new View.OnClickListener() {
             @Override

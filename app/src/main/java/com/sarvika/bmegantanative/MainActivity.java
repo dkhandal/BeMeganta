@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Log tag
     private static final String TAG = MainActivity.class.getSimpleName();
     public static ArrayList<Item> wishList = new ArrayList<Item>();
+    public static ArrayList<Item> cartList = new ArrayList<Item>();
 
     // Movies json url
     // Device - 192.168.1.13
@@ -630,16 +631,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch(id){
             case R.id.login: //0:
-                msg = "Login";
+//                msg = "Login";
                 Intent i = new Intent(getApplicationContext(),LoginActivity.class);
                 startActivity(i);
                 break;
             case R.id.search: //1:
-                msg = "Search";
+//                msg = "Search";
                 startActivity(new Intent(MainActivity.this, SearchResultActivity.class));
                 break;
             case R.id.cart: //2:
-                msg = "Cart";
+//                msg = "Cart";
+                startActivity(new Intent(MainActivity.this, CartListActivity.class));
                 break;
             case R.id.settings: //3:
                 msg = "Settings";
@@ -1049,6 +1051,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if(!Utilities.isNetworkAvailable(MainActivity.this)) {
             Utilities.showNoNetworkSnackBar(getWindow().getDecorView().getRootView());
+            tryNow.setVisibility(View.VISIBLE);
             return;
         }
 
@@ -1322,6 +1325,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 itemBean.setCode(obj.getString("code"));
                                 itemBean.setTitle(obj.getString("title"));
                                 itemBean.setTeaser(obj.getString("teaser"));
+                                itemBean.setShortDesription(obj.getString("desc_short"));
                                 itemBean.setTrimmed(obj.getBoolean("trimmed"));
                                 itemBean.setUrl(obj.getString("url"));
                                 itemBean.setImage(obj.getString("image"));
@@ -1375,7 +1379,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         items = new Item[itemBeanList.size()];
                         for (int i=0; i < itemBeanList.size(); i++){
                             String price = itemBeanList.get(i).getCurrencySign() + " " + itemBeanList.get(i).getPrice().getValue().getInteger() + "." + itemBeanList.get(i).getPrice().getValue().getDecimal();
-                            Item item = new Item(itemBeanList.get(i).getTitle(),price,IConstants.storeBase + itemBeanList.get(i).getImage());
+                            Item item = new Item(itemBeanList.get(i).getTitle(),price,IConstants.storeBase + itemBeanList.get(i).getImage(),itemBeanList.get(i).getShortDesription(),itemBeanList.get(i).getUrl());
                             items[i] = item;
                         }
                         itemAdapter = new ItemAdapter(MainActivity.this, items);

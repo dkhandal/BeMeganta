@@ -80,9 +80,10 @@ public class ItemDetailsActivity extends AppCompatActivity  { //implements Adapt
     private static final String TAG = ItemDetailsActivity.class.getSimpleName();
     private static final String INCREMENT = "Increment";
     private static final String DECREMENT = "Decrement";
+    String match_text = "";
     public int spinnerCounter = 0;
-    boolean isFirstColor = true;
-    boolean isFirstSize = true;
+    //boolean isFirstColor = true;
+    //boolean isFirstSize = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +117,9 @@ public class ItemDetailsActivity extends AppCompatActivity  { //implements Adapt
 //            textViewProdName.setText(getIntent().getStringExtra(MainActivity.PROD_NAME));
 //            textViewProdPrice.setText(getIntent().getStringExtra(MainActivity.PROD_PRICE));
             item = (Item)getIntent().getSerializableExtra(MainActivity.ITEM_OBJECT);
-            showItemDetails(itemUrl);
+            if(itemUrl != null) {
+                showItemDetails(itemUrl);
+            }
         }
 //        Uri uri = Uri.parse(stringImageUri);
 //        mImageView.setImageURI(uri);
@@ -139,7 +142,7 @@ public class ItemDetailsActivity extends AppCompatActivity  { //implements Adapt
 //                ImageUrlUtils imageUrlUtils = new ImageUrlUtils();
 //                imageUrlUtils.addCartListImageUri(stringImageUri);
                 if(item != null){
-                    MainActivity.wishList.add(item);
+                    MainActivity.cartList.add(item);
 
                     // save the task list to preference
 //                    SharedPreferences prefs = getSharedPreferences(SHARED_PREFS_FILE, Context.MODE_PRIVATE);
@@ -267,7 +270,7 @@ public class ItemDetailsActivity extends AppCompatActivity  { //implements Adapt
                                 } else {
                                     textDescLong.setText(Html.fromHtml(response.getString("desc_long").toString()));
                                 }
-                                List <Attributes> attributeList = new ArrayList<Attributes>();
+                                final List <Attributes> attributeList = new ArrayList<Attributes>();
 
 
                                 JSONArray attributesArray= response.getJSONArray("attributes");
@@ -310,6 +313,8 @@ public class ItemDetailsActivity extends AppCompatActivity  { //implements Adapt
                                     offerPricesList.add(offerPrices);
                                 }
 
+                                match_text=textViewItemCode.getText().toString()+".";
+                                final List<Spinner> spinners = new ArrayList<Spinner>();
                                 if(attributeList.size() > 0) {
 //                                    spinnerColor.setVisibility(View.VISIBLE);
 //                                    spinnerSize.setVisibility(View.VISIBLE);
@@ -321,13 +326,15 @@ public class ItemDetailsActivity extends AppCompatActivity  { //implements Adapt
                                     List<String> sizeList = new ArrayList<String>();
                                     for (int k = 0; k < attributeList.size() ; k++) {
                                          final List<AttributeDataValue> attributeDataList = new ArrayList<AttributeDataValue>();
-                                         Spinner spinner = new Spinner(ItemDetailsActivity.this);
+                                         final Spinner spinner = new Spinner(ItemDetailsActivity.this);
+                                        spinners.add(spinner);
+
                                         spinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 //                                        Random r = new Random();
 //                                        int randomNumber = r.nextInt(100);
                                         spinner.setId(1000 * (k + 1));
 
-                                        Attributes attributesObj = attributeList.get(k);
+                                        final Attributes attributesObj = attributeList.get(k);
 
                                             AttributeDataValue attributeDataValue1 = new AttributeDataValue();
                                             attributeDataValue1.setDdtext(attributesObj.getAttribute_dropname());
@@ -350,13 +357,21 @@ public class ItemDetailsActivity extends AppCompatActivity  { //implements Adapt
                                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                             @Override
                                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                if(isFirstColor) {
-                                                    isFirstColor = false;
-                                                }else{
-                                                    Toast.makeText(ItemDetailsActivity.this, "Selected Item: " + parent.getId() + " " + attributeDataList.get(position).getDdtext(), Toast.LENGTH_SHORT).show();
 
+                                                if(!attributesObj.getAttribute_name().equalsIgnoreCase(attributeDataList.get(position).getDdtext())){
+                                                for(int ij = 0;ij<spinners.size();ij++)
+                                                {
+
+                                                    String spinnervalue = spinners.get(ij).getSelectedItem().toString();
+                                                    Toast.makeText(ItemDetailsActivity.this, "aa namee" + attributeList.get(ij).getAttribute_name()+" total spinner val "+spinnervalue, Toast.LENGTH_LONG).show();
+                                                    if(!attributeList.get(ij).getAttribute_name().equalsIgnoreCase(spinnervalue)) {
+                                                        match_text = match_text + "-" + spinnervalue;
+                                                        Toast.makeText(ItemDetailsActivity.this, " " + match_text, Toast.LENGTH_LONG).show();
+                                                    }
 
                                                 }
+                                                   //Toast.makeText(ItemDetailsActivity.this, "Selected Item: " + parent.getId() + " " + attributeDataList.get(position).getDdtext(), Toast.LENGTH_SHORT).show();
+                                            }
                                             }
 
                                             @Override
@@ -370,68 +385,6 @@ public class ItemDetailsActivity extends AppCompatActivity  { //implements Adapt
                                     }else{
                                         linearLayoutSpinner.setOrientation(LinearLayout.HORIZONTAL);
                                     }
-
-                                    String codes = textViewItemCode.getText().toString();
-                                    for (int i=0;i < attributeDataListComplete.size(); i++){
-                                        List<AttributeDataValue> attributeDataList  = attributeDataListComplete.get(i);
-                                        for (int j=0;j < attributeDataList.size(); j++) {
-                                            AttributeDataValue attributeDataValue  = attributeDataList.get(j);
-                                            if(attributeDataValue.getCode() != null) {
-                                                //Log.d(TAG, attributeDataValue.getCode() );
-                                                codes = codes + " " + attributeDataValue.getCode() +"-" + attributeDataValue.getDdtext();
-                                            }
-//                                                            if(attributeDataValue.getCode().equalsIgnoreCase(attributeDataList.get(position).getCode())){
-//                                            OfferPrices offerPrices = offerPricesList.get(j);
-//                                            if(offerPrices.getItemcode().equalsIgnoreCase(attributeDataList.get(position).getCode())){
-//                                                Log.d(TAG,offerPrices.getItemprice());
-//                                            }
-//                                                            }
-                                        }
-
-                                    }
-
-                                    Log.d(TAG,codes);
-
-
-//                                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                                        @Override
-//                                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                                            if(isFirstColor) {
-//                                                isFirstColor = false;
-//                                            }else{
-//                                                Toast.makeText(ItemDetailsActivity.this, "Selected Item:" + " " + attributeDataColorList.get(position).getDdtext(), Toast.LENGTH_SHORT).show();
-//                                            }
-//                                        }
-//
-//                                        @Override
-//                                        public void onNothingSelected(AdapterView<?> parent) {
-//                                        }
-//                                    });
-//
-//                                    spinnerSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                                        @Override
-//                                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                                            if(isFirstSize) {
-//                                                isFirstSize = false;
-//                                            }else{
-//                                                //Toast.makeText(ItemDetailsActivity.this, "Selected Item:" + " " + attributeDataSizeList.get(position).getDdtext(), Toast.LENGTH_SHORT).show();
-//
-//                                                    for(OfferPrices op : offerPricesList){
-//                                                        if(op.getItemcode() != null && op.getItemcode().contains(attributeDataSizeList.get(position).getCode())){
-//                                                            Toast.makeText(ItemDetailsActivity.this, "Selected Price:" + " " + op.getItemprice(), Toast.LENGTH_SHORT).show();
-//                                                        }
-//
-//
-//                                                    }
-//                                            }
-//                                        }
-//
-//                                        @Override
-//                                        public void onNothingSelected(AdapterView<?> parent) {
-//                                        }
-//                                    });
-
-
 
 
                                 }else{

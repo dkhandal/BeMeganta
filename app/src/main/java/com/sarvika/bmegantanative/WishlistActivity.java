@@ -95,18 +95,19 @@ public class WishlistActivity extends AppCompatActivity {
 
             Glide.with(mContext).load(item.getImageUrl()).apply(RequestOptions.placeholderOf(R.drawable.loading_spinner)).into(holder.mImageView);
             holder.mItemName.setText(item.getItemName());
-            holder.mItemDesc.setText("desc pending");
-            holder.mItemPrice.setText(item.getItemDescription());
+            holder.mItemDesc.setText(item.getShortDescription());
+            holder.mItemPrice.setText(item.getItemPrice());
             holder.mLayoutItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     Intent intent = new Intent(mContext, ItemDetailsActivity.class);
+                    intent.putExtra(MainActivity.ITEM_URL, item.getItemUrl());
                     intent.putExtra(STRING_IMAGE_URI, item.getImageUrl());
                     intent.putExtra(STRING_IMAGE_POSITION, position);
                     //String price = item.getCurrencySign() + " " + itemBeanList.get(position).getPrice().getValue().getInteger() + "." + itemBeanList.get(position).getPrice().getValue().getDecimal();
                     intent.putExtra(PROD_NAME,item.getItemName());
-                    intent.putExtra(PROD_PRICE,item.getItemDescription());
+                    intent.putExtra(PROD_PRICE,item.getItemPrice());
                     intent.putExtra(ITEM_OBJECT,item);
                     mContext.startActivity(intent);
                 }

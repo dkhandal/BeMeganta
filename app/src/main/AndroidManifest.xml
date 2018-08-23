@@ -48,6 +48,10 @@
             android:name=".WishlistActivity"
             android:label="@string/my_wishlist">
         </activity>
+        <activity
+            android:name=".CartListActivity"
+            android:label="@string/my_cart">
+        </activity>
 
         <!--
             <activity

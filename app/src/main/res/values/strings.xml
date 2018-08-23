@@ -47,6 +47,7 @@
     <string name="my_wishlist">My Wishlist</string>
     <string name="search_hint">Search for Products, Brands and More</string>
     <string name="sizechart_link"><a href='#'><u>Size Chart</u></a></string>
+    <string name="my_cart">My Cart</string>
 
     <string-array name="item_array">
         <item>Choose</item>
